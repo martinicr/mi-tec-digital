@@ -23,8 +23,10 @@ public class EstudianteServiceImpl implements EstudianteService {
     public Optional<Estudiante> getById(int carne) {
 
         //TODO: validar el carne > 0. Si no cumple con eso se devuelve Optional.empty()
-
-        return this.estudianteDAO.findById(carne);
+        if(carne > 0) {
+            return this.estudianteDAO.findById(carne);
+        }
+        return Optional.empty();
     }
 
     public void addNew(Estudiante e) {
@@ -36,7 +38,10 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     public Optional<Estudiante> updateStudent(Estudiante e) {
         //TODO: validar que el carne exista en la BD. Si existe se actualiza
-        return this.estudianteDAO.update(e);
+        if(this.getById(e.getCarne()).isPresent()) {
+            return this.estudianteDAO.update(e);
+        }
+        return Optional.empty();
     }
 
     public void deleteStudent(int carne) {

@@ -4,19 +4,27 @@ import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tec.bd.app.domain.Estudiante;
+import tec.bd.app.service.CursoService;
 import tec.bd.app.service.EstudianteService;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 public class App  {
 
     private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
 
     public static void main(String[] args) {
 
         ApplicationContext applicationContext = ApplicationContext.init();
-        var estudianteService = applicationContext.getEstudianteServiceSet();
+        var estudianteService = applicationContext.getEstudianteService();
+        var cursoService = applicationContext.getCursoService();
+        var profesorService = applicationContext.getProfesorService();
 
         Options options = new Options();
 
@@ -32,8 +40,8 @@ public class App  {
         options.addOption(Option.builder("ec")
                 .longOpt("estudiante-nuevo")
                 .hasArg(true)
-                .numberOfArgs(4)
-                .desc("Agregar Estudiante: carne, nombre y apellido son requeridos")
+                .numberOfArgs(5)
+                .desc("Agregar Estudiante: carne, nombre, apellido, fecha de nacimiento y total creditos son requeridos")
                 .required(false)
                 .build());
 
@@ -52,8 +60,8 @@ public class App  {
 
         options.addOption(Option.builder("eu")
                 .longOpt("estudiante-actualizar")
-                .numberOfArgs(4)
-                .desc("Actualizar estudiante: carne, nombre y apellido son requeridos")
+                .numberOfArgs(5)
+                .desc("Actualizar estudiante: carne, nombre, apellido, fecha de nacimiento y total creditos son requeridos")
                 .required(false)
                 .build());
 
@@ -189,7 +197,8 @@ public class App  {
                         Integer.parseInt(newStudentValues[0]),
                         newStudentValues[1],
                         newStudentValues[2],
-                        Integer.parseInt(newStudentValues[3]));
+                        newStudentValues[3],
+                        Integer.parseInt(newStudentValues[4]));
                 showAllStudents(estudianteService);
             } else if(cmd.hasOption("ed")) {
                 // Borrar/remover un estudiante
@@ -203,7 +212,8 @@ public class App  {
                         Integer.parseInt(newStudentValues[0]),
                         newStudentValues[1],
                         newStudentValues[2],
-                        Integer.parseInt(newStudentValues[3]));
+                        newStudentValues[3],
+                        Integer.parseInt(newStudentValues[4]));
                 showAllStudents(estudianteService);
 
             } else if(cmd.hasOption("erln")) {
@@ -220,6 +230,7 @@ public class App  {
             } else if(cmd.hasOption("cr")) {
                 // Mostrar todos los estudiantes
                 System.out.println("IMPLEMENTAR: Mostrar todos los cursos");
+                showAllCourses(cursoService);
 
             } else if(cmd.hasOption("cid")) {
                 // Mostrar un curso por id
@@ -247,6 +258,7 @@ public class App  {
             } else if(cmd.hasOption("pr")) {
                 // Mostrar todos los profesores
                 System.out.println("IMPLEMENTAR: Mostrar todos los profesores");
+                profesorService.getAll();
 
             } else if(cmd.hasOption("pid")) {
                 // Mostrar un profesor por id
@@ -293,10 +305,10 @@ public class App  {
         System.out.println("\n\n");
         System.out.println("Lista de Estudiantes");
         System.out.println("-----------------------------------------------------------------------");
-        System.out.println("Carne\t\tNombre\t\tApellido\tEdad");
+        System.out.println("Carne\t\tNombre\t\tApellido\tFecha Nacimiento\tCreditos");
         System.out.println("-----------------------------------------------------------------------");
         for(Estudiante estudiante : estudianteService.getAll()) {
-            System.out.println(estudiante.getCarne() + "\t\t" + estudiante.getNombre() + "\t\t" +estudiante.getApellido() + "\t\t"+ estudiante.getEdad());
+            System.out.println(estudiante.getCarne() + "\t\t" + estudiante.getNombre() + "\t\t" +estudiante.getApellido() + "\t\t"+ estudiante.getFechaNacimiento() + "\t\t" + estudiante.getTotalCreditos());
         }
         System.out.println("-----------------------------------------------------------------------");
         System.out.println("\n\n");
@@ -312,8 +324,10 @@ public class App  {
         }
     }
 
-    public static void addNewStudent(EstudianteService estudianteService, int carne, String nombre, String apellido, int edad) {
-        var nuevoEstudiante = new Estudiante(carne,nombre, apellido, edad);
+    public static void addNewStudent(EstudianteService estudianteService, int carne, String nombre, String apellido,
+                                     String fechaNacimientoString, int totalCreditos) {
+        var fechaNacimiento = dateFromString(fechaNacimientoString);
+        var nuevoEstudiante = new Estudiante(carne,nombre, apellido, fechaNacimiento, totalCreditos);
         estudianteService.addNew(nuevoEstudiante);
     }
 
@@ -321,8 +335,23 @@ public class App  {
         estudianteService.deleteStudent(carne);
     }
 
-    public static void updateStudent(EstudianteService estudianteService, int carne, String nombre, String apellido, int edad) {
-        var nuevoEstudiante = new Estudiante(carne,nombre, apellido, edad);
+    public static void updateStudent(EstudianteService estudianteService, int carne, String nombre, String apellido,
+                                     String fechaNacimientoString, int totalCreditos) {
+        var fechaNacimiento = dateFromString(fechaNacimientoString);
+        var nuevoEstudiante = new Estudiante(carne,nombre, apellido, fechaNacimiento, totalCreditos);
         estudianteService.updateStudent(nuevoEstudiante);
+    }
+
+    public static void showAllCourses(CursoService cursoService) {
+        // System.out.println similar a showAllStudents
+    }
+
+    private static Date dateFromString(String fecha) {
+        Objects.requireNonNull(fecha, "Debe de proporcionar una fecha");
+        try {
+            return DATE_FORMAT.parse(fecha);
+        } catch (java.text.ParseException e) {
+            throw new RuntimeException("La fecha proporcionada es invalida", e);
+        }
     }
 }

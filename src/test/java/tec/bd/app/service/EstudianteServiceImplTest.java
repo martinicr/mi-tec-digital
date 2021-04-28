@@ -10,6 +10,7 @@ import tec.bd.app.domain.Estudiante;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,7 +73,7 @@ public class EstudianteServiceImplTest {
 
         var studentsBeforeSave = this.estudianteService.getAll();
 
-        var karol = new Estudiante(2, "Karol", "Jimenez", 21);
+        var karol = new Estudiante(2, "Karol", "Jimenez", new Date(), 21);
         estudianteService.addNew(karol);
 
         var studentsAfterSave = this.estudianteService.getAll();
@@ -115,7 +116,7 @@ public class EstudianteServiceImplTest {
 
         var studentBefore = this.estudianteService.getById(2);
 
-        var karol = new Estudiante(2, "Karol", "Jimenez", 21);
+        var karol = new Estudiante(2, "Karol", "Jimenez", new Date(), 21);
         estudianteService.updateStudent(karol);
 
         var studentAfter = this.estudianteService.getById(2);
