@@ -167,30 +167,4 @@ public class EstudianteMySqlDAOImpl extends GenericMySqlDAOImpl<Estudiante, Inte
         return estudiantes;
     }
 
-
-//    protected EstudianteMysqlDAOImpl(DBProperties dbProperties) {
-//        super(dbProperties, Estudiante.class);
-//    }
-//
-//    @Override
-//    public List<Estudiante> findByLastName(String lastName) {
-//        return null;
-//    }
-//
-//    @Override
-//    public List<Estudiante> findAllSortByLastName() {
-//        return null;
-//    }
-//
-//    @Override
-//    protected String attributeValues(Estudiante estudiante) {
-//        return null;
-//    }
-//
-//    @Override
-//    protected String attributesAndValues(Estudiante estudiante) {
-//        return null;
-//    }
-//
-
 }
