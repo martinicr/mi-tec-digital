@@ -11,6 +11,13 @@ public class Curso implements Entity {
 
     }
 
+    public Curso(Integer id, String nombre, int creditos, String departamento) {
+        this.id = id;
+        this.nombre = nombre;
+        this.creditos = creditos;
+        this.departamento = departamento;
+    }
+
     public Integer getId() {
         return id;
     }

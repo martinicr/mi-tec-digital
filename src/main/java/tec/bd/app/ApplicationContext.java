@@ -1,6 +1,8 @@
 package tec.bd.app;
 
+import tec.bd.app.controller.EstudianteController;
 import tec.bd.app.dao.*;
+import tec.bd.app.dao.mysql.CursoMySqlDAOImpl;
 import tec.bd.app.dao.mysql.EstudianteMySqlDAOImpl;
 import tec.bd.app.dao.set.CursoSetDAOImpl;
 import tec.bd.app.dao.set.EstudianteSetDAOImpl;
@@ -25,6 +27,7 @@ public class ApplicationContext {
     private SetDB setDB;
     private EstudianteDAO estudianteDAO;
     private EstudianteService estudianteService;
+    private EstudianteController estudianteController;
 
     private CursoDAO cursoDAO;
     private CursoService cursoService;
@@ -32,13 +35,6 @@ public class ApplicationContext {
     private ProfesorDAO profesorDAO;
     private ProfesorService profesorService;
 
-
-
-
-//    private static final String CONNECTION_STRING = "jdbc:mysql://localhost:3306/universidad";
-//    private static final String DB_USERNAME = "root";
-//    private static final String DB_PASSWORD = "rootroot";
-//    private static final DBProperties DB_PROPERTIES = new DBProperties(CONNECTION_STRING, DB_USERNAME, DB_PASSWORD);
 
     private static final String DATABASE_PROPERTIES_FILE = "/database.properties";
     private static final String CONNECTION_STRING_PROP = "database.url";
@@ -55,20 +51,23 @@ public class ApplicationContext {
 //        Objetos que usan SetDB
         applicationContext.setDB = initSetDB();
 //        applicationContext.estudianteDAO = initEstudianteSetDAO(applicationContext.setDB);
-        applicationContext.cursoDAO = initCursoSetDAO(applicationContext.setDB);
+//        applicationContext.cursoDAO = initCursoSetDAO(applicationContext.setDB);
         applicationContext.profesorDAO = initProfesorSetDAO(applicationContext.setDB);
 
 //        Objetos que se conectan a MySQL
         String dbPropertiesFilePath = applicationContext.getClass().getResource(DATABASE_PROPERTIES_FILE).getFile();
         DBProperties databaseProperties = initDBProperties(dbPropertiesFilePath);
         applicationContext.estudianteDAO = initEstudianteMysqlDAO(databaseProperties);
-//        applicationContext.cursoDAO = initCursoMysqlDAO(databaseProperties);
+        applicationContext.cursoDAO = initCursoMysqlDAO(databaseProperties);
 //        applicationContext.profesorDAO = initProfesorMysqlDAO(databaseProperties);
 
 
         applicationContext.estudianteService = initEstudianteService(applicationContext.estudianteDAO);
         applicationContext.cursoService = initCursoService(applicationContext.cursoDAO);
         applicationContext.profesorService = initProfesorService(applicationContext.profesorDAO);
+
+        applicationContext.estudianteController = initEstudianteController(applicationContext.estudianteService);
+
         return applicationContext;
     }
 
@@ -176,8 +175,7 @@ public class ApplicationContext {
     }
 
     private static CursoDAO initCursoMysqlDAO(DBProperties dbProperties) {
-//        return new CursoMySqlDAOImpl(dbProperties);
-        return null;
+        return new CursoMySqlDAOImpl(dbProperties);
     }
 
     private static ProfesorDAO initProfesorMysqlDAO(DBProperties dbProperties) {
@@ -198,6 +196,12 @@ public class ApplicationContext {
 
     private static ProfesorService initProfesorService(ProfesorDAO profesorDAO) {
         return new ProfesorServiceImpl(profesorDAO);
+    }
+
+//    Controller
+
+    private static EstudianteController initEstudianteController(EstudianteService estudianteService) {
+        return new EstudianteController(estudianteService);
     }
 
 

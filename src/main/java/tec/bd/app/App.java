@@ -3,6 +3,9 @@ package tec.bd.app;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tec.bd.app.controller.CursoController;
+import tec.bd.app.controller.EstudianteController;
+import tec.bd.app.domain.Curso;
 import tec.bd.app.domain.Estudiante;
 import tec.bd.app.service.CursoService;
 import tec.bd.app.service.EstudianteService;
@@ -11,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
+
+import static spark.Spark.*;
 
 public class App  {
 
@@ -25,6 +30,14 @@ public class App  {
         var estudianteService = applicationContext.getEstudianteService();
         var cursoService = applicationContext.getCursoService();
         var profesorService = applicationContext.getProfesorService();
+
+
+//        var estudianteController = new EstudianteController(estudianteService);
+//        var cursoController = new CursoController(cursoService);
+
+//        get("/estudiante", estudianteController::estudiantes);
+//        get("/estudiante/:carnet", estudianteController::estudiante);
+//        get("/cursos", cursoController::cursos);
 
         Options options = new Options();
 
@@ -229,7 +242,7 @@ public class App  {
 
             } else if(cmd.hasOption("cr")) {
                 // Mostrar todos los estudiantes
-                System.out.println("IMPLEMENTAR: Mostrar todos los cursos");
+//                System.out.println("IMPLEMENTAR: Mostrar todos los cursos");
                 showAllCourses(cursoService);
 
             } else if(cmd.hasOption("cid")) {
@@ -343,7 +356,18 @@ public class App  {
     }
 
     public static void showAllCourses(CursoService cursoService) {
-        // System.out.println similar a showAllStudents
+
+        System.out.println("\n\n");
+        System.out.println("Lista de Cursos");
+        System.out.println("-----------------------------------------------------------------------");
+        System.out.println("ID\t\tNombre\t\tCreditos\tDepartamento");
+        System.out.println("-----------------------------------------------------------------------");
+        for(Curso curso : cursoService.getAll()) {
+            System.out.println(curso.getId()+ "\t\t" + curso.getNombre() + "\t\t" +curso.getCreditos() + "\t\t"+ curso.getDepartamento());
+        }
+        System.out.println("-----------------------------------------------------------------------");
+        System.out.println("\n\n");
+
     }
 
     private static Date dateFromString(String fecha) {
@@ -354,4 +378,5 @@ public class App  {
             throw new RuntimeException("La fecha proporcionada es invalida", e);
         }
     }
+
 }
