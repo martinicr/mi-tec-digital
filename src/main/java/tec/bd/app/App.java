@@ -3,8 +3,6 @@ package tec.bd.app;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tec.bd.app.controller.CursoController;
-import tec.bd.app.controller.EstudianteController;
 import tec.bd.app.domain.Curso;
 import tec.bd.app.domain.Estudiante;
 import tec.bd.app.service.CursoService;
