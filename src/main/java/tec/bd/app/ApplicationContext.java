@@ -1,6 +1,5 @@
 package tec.bd.app;
 
-import tec.bd.app.controller.EstudianteController;
 import tec.bd.app.dao.*;
 import tec.bd.app.dao.mysql.CursoMySqlDAOImpl;
 import tec.bd.app.dao.mysql.EstudianteMySqlDAOImpl;
@@ -27,7 +26,7 @@ public class ApplicationContext {
     private SetDB setDB;
     private EstudianteDAO estudianteDAO;
     private EstudianteService estudianteService;
-    private EstudianteController estudianteController;
+//    private EstudianteController estudianteController;
 
     private CursoDAO cursoDAO;
     private CursoService cursoService;
@@ -66,7 +65,7 @@ public class ApplicationContext {
         applicationContext.cursoService = initCursoService(applicationContext.cursoDAO);
         applicationContext.profesorService = initProfesorService(applicationContext.profesorDAO);
 
-        applicationContext.estudianteController = initEstudianteController(applicationContext.estudianteService);
+//        applicationContext.estudianteController = initEstudianteController(applicationContext.estudianteService);
 
         return applicationContext;
     }
@@ -200,9 +199,9 @@ public class ApplicationContext {
 
 //    Controller
 
-    private static EstudianteController initEstudianteController(EstudianteService estudianteService) {
-        return new EstudianteController(estudianteService);
-    }
+//    private static EstudianteController initEstudianteController(EstudianteService estudianteService) {
+//        return new EstudianteController(estudianteService);
+//    }
 
 
     public SetDB getSetDB() {
